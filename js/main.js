@@ -13,46 +13,66 @@ async function inicializarApp() {
         // Mostrar loader
         mostrarLoader(true);
 
+        // Verificar dependencias críticas
+        if (typeof Swal === 'undefined') {
+            console.error('SweetAlert2 no está cargado');
+            alert('Error: No se pudo cargar una dependencia necesaria (SweetAlert2). Por favor, verifica tu conexión a internet.');
+        }
+
         // Crear instancia del cotizador
         cotizadorActual = new Cotizador();
 
         // Cargar datos
+        console.log('Iniciando carga de productos...');
         await cargarProductos();
+        console.log('Productos cargados correctamente');
 
         // Renderizar categorías
         renderizarCategorias();
 
-        // Cargar última configuración si existe
-        const ultimaConfig = cargarUltimaConfiguracion();
-        if (ultimaConfig && Object.keys(ultimaConfig).length > 0) {
-            const resultado = await Swal.fire({
-                icon: 'question',
-                title: '¿Continuar con la última configuración?',
-                text: 'Detectamos que dejaste una configuración sin terminar',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, continuar',
-                cancelButtonText: 'Empezar de nuevo',
-                confirmButtonColor: '#6366f1',
-                cancelButtonColor: '#6b7280'
-            });
-
-            if (resultado.isConfirmed) {
-                cotizadorActual.cargarConfiguracion(ultimaConfig);
-                actualizarResumen();
-            }
-        }
-
         // Configurar event listeners
         configurarEventListeners();
 
-        // Ocultar loader
+        // Ocultar loader ANTES de cualquier interacción
+        console.log('Carga completada, ocultando loader');
         mostrarLoader(false);
 
+        // Cargar última configuración si existe
+        const ultimaConfig = cargarUltimaConfiguracion();
+        if (ultimaConfig && Object.keys(ultimaConfig).length > 0 && typeof Swal !== 'undefined') {
+            try {
+                const resultado = await Swal.fire({
+                    icon: 'question',
+                    title: '¿Continuar con la última configuración?',
+                    text: 'Detectamos que dejaste una configuración sin terminar',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'Empezar de nuevo',
+                    confirmButtonColor: '#6366f1',
+                    cancelButtonColor: '#6b7280',
+                    allowOutsideClick: false // Obligar a responder
+                });
+
+                if (resultado.isConfirmed) {
+                    cotizadorActual.cargarConfiguracion(ultimaConfig);
+                    actualizarResumen();
+                }
+            } catch (swalError) {
+                console.error('Error al mostrar alerta de configuración previa:', swalError);
+            }
+        }
+
         // Mostrar mensaje de bienvenida
-        mostrarMensajeBienvenida();
+        if (typeof Swal !== 'undefined') {
+            mostrarMensajeBienvenida();
+        }
 
     } catch (error) {
-        console.error('Error al inicializar la aplicación:', error);
+        console.error('Error crítico al inicializar la aplicación:', error);
+        alert('Ocurrió un error al cargar la aplicación. Revisa la consola para más detalles.');
+    } finally {
+        // Ocultar loader SIEMPRE, pase lo que pase
+        console.log('Finalizando inicialización, ocultando loader');
         mostrarLoader(false);
     }
 }
@@ -350,7 +370,13 @@ function eliminarCotizacionGuardada(id) {
 function mostrarLoader(mostrar) {
     const loader = document.getElementById('loader');
     if (loader) {
-        loader.style.display = mostrar ? 'flex' : 'none';
+        if (mostrar) {
+            loader.classList.remove('d-none');
+            loader.classList.add('d-flex');
+        } else {
+            loader.classList.remove('d-flex');
+            loader.classList.add('d-none');
+        }
     }
 }
 

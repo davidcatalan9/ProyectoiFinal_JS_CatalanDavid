@@ -100,12 +100,16 @@ async function cargarProductos() {
         }
     } catch (error) {
         console.error('Error al cargar productos:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error de carga',
-            text: 'No se pudieron cargar los productos. Por favor, recarga la página.',
-            confirmButtonColor: '#6366f1'
-        });
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de carga',
+                text: 'No se pudieron cargar los productos. Por favor, recarga la página.',
+                confirmButtonColor: '#6366f1'
+            });
+        } else {
+            alert('Error crítico: No se pudieron cargar los productos y las alertas no funcionan.');
+        }
         throw error;
     }
 }
