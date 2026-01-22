@@ -1,11 +1,6 @@
-// ==========================================
-// MÓDULO DE FORMULARIOS
-// Maneja validación y procesamiento de formularios
-// ==========================================
 
-/**
- * Precarga datos de ejemplo en el formulario
- */
+
+
 function precargarDatosFormulario() {
     const formContacto = document.getElementById('form-contacto');
 
@@ -24,26 +19,22 @@ function precargarDatosFormulario() {
     }
 }
 
-/**
- * Valida los datos del formulario
- * @param {Object} formData - Datos del formulario
- * @returns {Object} Resultado de validación
- */
+
 function validarFormulario(formData) {
     const errores = [];
 
-    // Validar nombre
+
     if (!formData.nombre || formData.nombre.trim().length < 3) {
         errores.push('El nombre debe tener al menos 3 caracteres');
     }
 
-    // Validar email
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email || !emailRegex.test(formData.email)) {
         errores.push('El email no es válido');
     }
 
-    // Validar teléfono (opcional pero si existe debe ser válido)
+
     if (formData.telefono) {
         const telefonoRegex = /^[0-9]{10,15}$/;
         if (!telefonoRegex.test(formData.telefono.replace(/\s/g, ''))) {
@@ -57,13 +48,10 @@ function validarFormulario(formData) {
     };
 }
 
-/**
- * Procesa el envío de la cotización
- * @param {Object} datos - Datos del formulario y cotización
- */
+
 async function enviarCotizacion(datos) {
     try {
-        // Validar formulario
+
         const validacion = validarFormulario(datos.formulario);
 
         if (!validacion.valido) {
@@ -76,7 +64,7 @@ async function enviarCotizacion(datos) {
             return false;
         }
 
-        // Validar que haya una configuración
+
         if (!datos.cotizacion || datos.cotizacion.numComponentes === 0) {
             await Swal.fire({
                 icon: 'warning',
@@ -87,10 +75,10 @@ async function enviarCotizacion(datos) {
             return false;
         }
 
-        // Simular envío (en un caso real, aquí iría un fetch a un servidor)
+
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Mostrar confirmación
+
         const result = await Swal.fire({
             icon: 'success',
             title: '¡Cotización enviada!',
@@ -107,7 +95,7 @@ async function enviarCotizacion(datos) {
             cancelButtonColor: '#8b5cf6'
         });
 
-        // Si el usuario clickea "Guardar cotización"
+
         if (result.dismiss === Swal.DismissReason.cancel) {
             await solicitarNombreCotizacion(datos.cotizacion);
         }
@@ -125,10 +113,7 @@ async function enviarCotizacion(datos) {
     }
 }
 
-/**
- * Solicita un nombre para guardar la cotización
- * @param {Object} cotizacion - Cotización a guardar
- */
+
 async function solicitarNombreCotizacion(cotizacion) {
     const { value: nombre } = await Swal.fire({
         title: 'Guardar cotización',

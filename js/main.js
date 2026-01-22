@@ -1,43 +1,38 @@
-// ==========================================
-// ARCHIVO PRINCIPAL
-// Orquesta la aplicación y maneja eventos globales
-// ==========================================
+
 
 let cotizadorActual = null;
 
-/**
- * Inicializa la aplicación
- */
+
 async function inicializarApp() {
     try {
-        // Mostrar loader
+
         mostrarLoader(true);
 
-        // Verificar dependencias críticas
+
         if (typeof Swal === 'undefined') {
             console.error('SweetAlert2 no está cargado');
             alert('Error: No se pudo cargar una dependencia necesaria (SweetAlert2). Por favor, verifica tu conexión a internet.');
         }
 
-        // Crear instancia del cotizador
+
         cotizadorActual = new Cotizador();
 
-        // Cargar datos
+
         console.log('Iniciando carga de productos...');
         await cargarProductos();
         console.log('Productos cargados correctamente');
 
-        // Renderizar categorías
+
         renderizarCategorias();
 
-        // Configurar event listeners
+
         configurarEventListeners();
 
-        // Ocultar loader ANTES de cualquier interacción
+
         console.log('Carga completada, ocultando loader');
         mostrarLoader(false);
 
-        // Cargar última configuración si existe
+
         const ultimaConfig = cargarUltimaConfiguracion();
         if (ultimaConfig && Object.keys(ultimaConfig).length > 0 && typeof Swal !== 'undefined') {
             try {
@@ -50,7 +45,7 @@ async function inicializarApp() {
                     cancelButtonText: 'Empezar de nuevo',
                     confirmButtonColor: '#6366f1',
                     cancelButtonColor: '#6b7280',
-                    allowOutsideClick: false // Obligar a responder
+                    allowOutsideClick: false
                 });
 
                 if (resultado.isConfirmed) {
@@ -62,7 +57,7 @@ async function inicializarApp() {
             }
         }
 
-        // Mostrar mensaje de bienvenida
+
         if (typeof Swal !== 'undefined') {
             mostrarMensajeBienvenida();
         }
@@ -71,29 +66,27 @@ async function inicializarApp() {
         console.error('Error crítico al inicializar la aplicación:', error);
         alert('Ocurrió un error al cargar la aplicación. Revisa la consola para más detalles.');
     } finally {
-        // Ocultar loader SIEMPRE, pase lo que pase
+
         console.log('Finalizando inicialización, ocultando loader');
         mostrarLoader(false);
     }
 }
 
-/**
- * Configura todos los event listeners de la aplicación
- */
+
 function configurarEventListeners() {
-    // Botón de limpiar configuración
+
     const btnLimpiar = document.getElementById('btn-limpiar');
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', limpiarConfiguracion);
     }
 
-    // Botón de enviar cotización
+
     const btnEnviar = document.getElementById('btn-enviar');
     if (btnEnviar) {
         btnEnviar.addEventListener('click', mostrarModalConfirmacion);
     }
 
-    // Botón de guardar cotización
+
     const btnGuardar = document.getElementById('btn-guardar');
     if (btnGuardar) {
         btnGuardar.addEventListener('click', async () => {
@@ -110,19 +103,19 @@ function configurarEventListeners() {
         });
     }
 
-    // Botón de ver cotizaciones guardadas
+
     const btnVerGuardadas = document.getElementById('btn-ver-guardadas');
     if (btnVerGuardadas) {
         btnVerGuardadas.addEventListener('click', mostrarCotizacionesGuardadas);
     }
 
-    // Botón de comparar
+
     const btnComparar = document.getElementById('btn-comparar');
     if (btnComparar) {
         btnComparar.addEventListener('click', mostrarComparacion);
     }
 
-    // Guardar configuración antes de salir
+
     window.addEventListener('beforeunload', () => {
         if (cotizadorActual && Object.keys(cotizadorActual.configuracion).length > 0) {
             guardarUltimaConfiguracion(cotizadorActual.configuracion);
@@ -130,10 +123,7 @@ function configurarEventListeners() {
     });
 }
 
-/**
- * Agrega un producto al cotizador
- * @param {string} productoId - ID del producto
- */
+
 function agregarAlCotizador(productoId) {
     const producto = buscarProductoPorId(productoId);
 
@@ -147,7 +137,7 @@ function agregarAlCotizador(productoId) {
         return;
     }
 
-    // Verificar si ya hay un componente de esa categoría
+
     const componenteExistente = cotizadorActual.configuracion[producto.categoria];
 
     if (componenteExistente) {
@@ -165,7 +155,7 @@ function agregarAlCotizador(productoId) {
                 cotizadorActual.agregarComponente(producto);
                 actualizarResumen();
 
-                // Volver a renderizar los productos de esta categoría para actualizar el estado
+
                 const categoria = obtenerCategoria(producto.categoria);
                 const productos = filtrarPorCategoria(producto.categoria);
                 renderizarProductos(categoria, productos);
@@ -182,12 +172,12 @@ function agregarAlCotizador(productoId) {
         cotizadorActual.agregarComponente(producto);
         actualizarResumen();
 
-        // Volver a renderizar los productos de esta categoría
+
         const categoria = obtenerCategoria(producto.categoria);
         const productos = filtrarPorCategoria(producto.categoria);
         renderizarProductos(categoria, productos);
 
-        // Efecto visual
+
         Swal.fire({
             icon: 'success',
             title: 'Componente agregado',
@@ -199,10 +189,7 @@ function agregarAlCotizador(productoId) {
     }
 }
 
-/**
- * Remueve un componente del cotizador
- * @param {string} categoria - Categoría del componente
- */
+
 function removerDelCotizador(categoria) {
     const producto = cotizadorActual.configuracion[categoria];
 
@@ -222,7 +209,7 @@ function removerDelCotizador(categoria) {
             cotizadorActual.removerComponente(categoria);
             actualizarResumen();
 
-            // Si la sección de productos muestra esta categoría, actualizar
+
             const productosTitulo = document.getElementById('productos-titulo');
             if (productosTitulo && productosTitulo.textContent.includes(obtenerCategoria(categoria)?.nombre)) {
                 const cat = obtenerCategoria(categoria);
@@ -240,9 +227,7 @@ function removerDelCotizador(categoria) {
     });
 }
 
-/**
- * Limpia toda la configuración actual
- */
+
 function limpiarConfiguracion() {
     if (Object.keys(cotizadorActual.configuracion).length === 0) {
         Swal.fire({
@@ -268,7 +253,7 @@ function limpiarConfiguracion() {
             cotizadorActual.limpiar();
             actualizarResumen();
 
-            // Ocultar sección de productos
+
             document.getElementById('productos-section').style.display = 'none';
 
             Swal.fire({
@@ -281,10 +266,7 @@ function limpiarConfiguracion() {
     });
 }
 
-/**
- * Carga una cotización guardada
- * @param {number} id - ID de la cotización
- */
+
 function cargarCotizacionGuardada(id) {
     const cotizaciones = cargarCotizaciones();
     const cotizacion = cotizaciones.find(cot => cot.id === id);
@@ -313,7 +295,7 @@ function cargarCotizacionGuardada(id) {
             cotizadorActual.cargarConfiguracion(cotizacion.configuracion);
             actualizarResumen();
 
-            // Cerrar el modal de cotizaciones guardadas
+
             Swal.close();
 
             Swal.fire({
@@ -324,16 +306,13 @@ function cargarCotizacionGuardada(id) {
                 showConfirmButton: false
             });
 
-            // Scroll al inicio
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     });
 }
 
-/**
- * Elimina una cotización guardada
- * @param {number} id - ID de la cotización
- */
+
 function eliminarCotizacionGuardada(id) {
     Swal.fire({
         icon: 'warning',
@@ -349,7 +328,7 @@ function eliminarCotizacionGuardada(id) {
             const eliminado = eliminarCotizacion(id);
 
             if (eliminado) {
-                // Actualizar la lista
+
                 mostrarCotizacionesGuardadas();
 
                 Swal.fire({
@@ -363,10 +342,7 @@ function eliminarCotizacionGuardada(id) {
     });
 }
 
-/**
- * Muestra/oculta el loader
- * @param {boolean} mostrar - True para mostrar, false para ocultar
- */
+
 function mostrarLoader(mostrar) {
     const loader = document.getElementById('loader');
     if (loader) {
@@ -380,9 +356,7 @@ function mostrarLoader(mostrar) {
     }
 }
 
-/**
- * Muestra mensaje de bienvenida
- */
+
 function mostrarMensajeBienvenida() {
     const yaVisto = sessionStorage.getItem('bienvenida_vista');
 
@@ -402,5 +376,5 @@ function mostrarMensajeBienvenida() {
     }
 }
 
-// Inicializar la aplicación cuando el DOM esté listo
+
 document.addEventListener('DOMContentLoaded', inicializarApp);

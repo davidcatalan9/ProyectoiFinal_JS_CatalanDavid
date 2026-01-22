@@ -1,14 +1,10 @@
-// ==========================================
-// MÓDULO DE CARGA DE DATOS
-// Maneja la carga asíncrona de productos desde JSON
-// Con fallback para evitar problemas de CORS con file://
-// ==========================================
+
 
 let productosCache = null;
 let categoriasCache = null;
 let descuentosCache = null;
 
-// Datos embebidos como fallback para cuando falla fetch (protocolo file://)
+
 const DATOS_FALLBACK = {
     "categorias": [
         { "id": "procesadores", "nombre": "Procesadores", "icono": "bi-cpu", "descripcion": "El cerebro de tu computadora" },
@@ -65,17 +61,14 @@ const DATOS_FALLBACK = {
     ]
 };
 
-/**
- * Carga los productos desde el archivo JSON o usa fallback
- * @returns {Promise<Object>} Objeto con productos y categorías
- */
+
 async function cargarProductos() {
     try {
         if (productosCache && categoriasCache) {
             return { productos: productosCache, categorias: categoriasCache, descuentos: descuentosCache };
         }
 
-        // Intentar cargar desde JSON
+
         try {
             const response = await fetch('./data/productos.json');
 
@@ -91,7 +84,7 @@ async function cargarProductos() {
             console.log('✅ Datos cargados desde JSON');
             return { productos: data.productos, categorias: data.categorias, descuentos: data.descuentos };
         } catch (fetchError) {
-            // Si falla fetch (ej: protocolo file://), usar datos embebidos
+
             console.warn('⚠️ No se pudo cargar JSON, usando datos embebidos:', fetchError.message);
 
             productosCache = DATOS_FALLBACK.productos;
@@ -121,11 +114,7 @@ async function cargarProductos() {
     }
 }
 
-/**
- * Filtra productos por categoría
- * @param {string} categoria - ID de la categoría
- * @returns {Array} Array de productos filtrados
- */
+
 function filtrarPorCategoria(categoria) {
     if (!productosCache) {
         console.error('Productos no cargados');
@@ -135,11 +124,7 @@ function filtrarPorCategoria(categoria) {
     return productosCache.filter(producto => producto.categoria === categoria);
 }
 
-/**
- * Busca un producto por su ID
- * @param {string} id - ID del producto
- * @returns {Object|null} Producto encontrado o null
- */
+
 function buscarProductoPorId(id) {
     if (!productosCache) {
         console.error('Productos no cargados');
@@ -149,11 +134,7 @@ function buscarProductoPorId(id) {
     return productosCache.find(producto => producto.id === id);
 }
 
-/**
- * Obtiene información de una categoría
- * @param {string} categoriaId - ID de la categoría
- * @returns {Object|null} Categoría encontrada o null
- */
+
 function obtenerCategoria(categoriaId) {
     if (!categoriasCache) {
         console.error('Categorías no cargadas');
@@ -163,10 +144,7 @@ function obtenerCategoria(categoriaId) {
     return categoriasCache.find(cat => cat.id === categoriaId);
 }
 
-/**
- * Obtiene todas las categorías
- * @returns {Array} Array de categorías
- */
+
 function obtenerCategorias() {
     return categoriasCache || [];
 }

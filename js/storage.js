@@ -1,17 +1,9 @@
-// ==========================================
-// MÓDULO DE PERSISTENCIA
-// Maneja el guardado y recuperación de datos en LocalStorage
-// ==========================================
+
 
 const STORAGE_KEY_COTIZACIONES = 'cotizaciones_guardadas';
 const STORAGE_KEY_ULTIMA = 'ultima_configuracion';
 
-/**
- * Guarda una cotización en LocalStorage
- * @param {string} nombre - Nombre de la cotización
- * @param {Object} cotizacion - Objeto de cotización a guardar
- * @returns {boolean} True si se guardó correctamente
- */
+
 function guardarCotizacion(nombre, cotizacion) {
     try {
         const cotizaciones = cargarCotizaciones();
@@ -33,10 +25,7 @@ function guardarCotizacion(nombre, cotizacion) {
     }
 }
 
-/**
- * Carga todas las cotizaciones guardadas
- * @returns {Array} Array de cotizaciones
- */
+
 function cargarCotizaciones() {
     try {
         const data = localStorage.getItem(STORAGE_KEY_COTIZACIONES);
@@ -47,11 +36,7 @@ function cargarCotizaciones() {
     }
 }
 
-/**
- * Elimina una cotización específica
- * @param {number} id - ID de la cotización a eliminar
- * @returns {boolean} True si se eliminó correctamente
- */
+
 function eliminarCotizacion(id) {
     try {
         let cotizaciones = cargarCotizaciones();
@@ -64,10 +49,7 @@ function eliminarCotizacion(id) {
     }
 }
 
-/**
- * Guarda la última configuración trabajada
- * @param {Object} configuracion - Configuración a guardar
- */
+
 function guardarUltimaConfiguracion(configuracion) {
     try {
         localStorage.setItem(STORAGE_KEY_ULTIMA, JSON.stringify(configuracion));
@@ -76,10 +58,7 @@ function guardarUltimaConfiguracion(configuracion) {
     }
 }
 
-/**
- * Recupera la última configuración trabajada
- * @returns {Object|null} Configuración o null
- */
+
 function cargarUltimaConfiguracion() {
     try {
         const data = localStorage.getItem(STORAGE_KEY_ULTIMA);
@@ -90,11 +69,7 @@ function cargarUltimaConfiguracion() {
     }
 }
 
-/**
- * Exporta una cotización como archivo JSON
- * @param {Object} cotizacion - Cotización a exportar
- * @param {string} nombre - Nombre del archivo
- */
+
 function exportarCotizacion(cotizacion, nombre) {
     try {
         const dataStr = JSON.stringify(cotizacion, null, 2);
@@ -121,9 +96,7 @@ function exportarCotizacion(cotizacion, nombre) {
     }
 }
 
-/**
- * Limpia todas las cotizaciones guardadas
- */
+
 function limpiarTodasLasCotizaciones() {
     try {
         localStorage.removeItem(STORAGE_KEY_COTIZACIONES);

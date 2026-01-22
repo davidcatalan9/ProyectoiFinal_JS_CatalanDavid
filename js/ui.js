@@ -1,12 +1,6 @@
-// ==========================================
-// MÓDULO DE INTERFAZ DE USUARIO
-// Genera y actualiza elementos del DOM dinámicamente
-// Compatible con Bootstrap 5
-// ==========================================
 
-/**
- * Renderiza las categorías de productos usando Bootstrap 5
- */
+
+
 function renderizarCategorias() {
     const container = document.getElementById('categorias-container');
     if (!container) return;
@@ -33,10 +27,7 @@ function renderizarCategorias() {
     });
 }
 
-/**
- * Muestra los productos de una categoría específica
- * @param {string} categoriaId - ID de la categoría
- */
+
 function mostrarProductosCategoria(categoriaId) {
     const productos = filtrarPorCategoria(categoriaId);
     const categoria = obtenerCategoria(categoriaId);
@@ -53,18 +44,14 @@ function mostrarProductosCategoria(categoriaId) {
 
     renderizarProductos(categoria, productos);
 
-    // Scroll suave a la sección de productos
+
     document.getElementById('productos-section').scrollIntoView({
         behavior: 'smooth',
         block: 'start'
     });
 }
 
-/**
- * Renderiza un grid de productos con Bootstrap 5
- * @param {Object} categoria - Categoría actual
- * @param {Array} productos - Array de productos a mostrar
- */
+
 function renderizarProductos(categoria, productos) {
     const container = document.getElementById('productos-grid');
     const titulo = document.getElementById('productos-titulo');
@@ -78,7 +65,7 @@ function renderizarProductos(categoria, productos) {
         const col = document.createElement('div');
         col.className = 'col';
 
-        // Determinar si ya está agregado
+
         const yaAgregado = cotizadorActual.configuracion[producto.categoria]?.id === producto.id;
 
         col.innerHTML = `
@@ -112,13 +99,11 @@ function renderizarProductos(categoria, productos) {
         container.appendChild(col);
     });
 
-    // Mostrar la sección de productos
+
     document.getElementById('productos-section').style.display = 'block';
 }
 
-/**
- * Actualiza el resumen de la cotización en el sidebar
- */
+
 function actualizarResumen() {
     const resumen = cotizadorActual.obtenerResumen();
     const container = document.getElementById('resumen-items');
@@ -129,7 +114,7 @@ function actualizarResumen() {
 
     if (!container) return;
 
-    // Renderizar items
+
     container.innerHTML = '';
 
     if (resumen.numComponentes === 0) {
@@ -152,12 +137,12 @@ function actualizarResumen() {
         }
     }
 
-    // Actualizar totales
+
     if (totalBase) totalBase.textContent = `$${resumen.precioBase.toLocaleString('es-AR')}`;
     if (totalDescuento) totalDescuento.textContent = `${resumen.descuento}%`;
     if (totalFinal) totalFinal.textContent = `$${resumen.precioFinal.toLocaleString('es-AR')}`;
 
-    // Mostrar descuentos aplicados
+
     if (descuentosContainer) {
         if (resumen.descuentosAplicados.length > 0) {
             descuentosContainer.innerHTML = resumen.descuentosAplicados.map(desc =>
@@ -172,7 +157,7 @@ function actualizarResumen() {
         }
     }
 
-    // Actualizar contador en el badge
+
     const badge = document.querySelector('.resumen-badge');
     if (badge) {
         badge.textContent = resumen.numComponentes;
@@ -180,9 +165,7 @@ function actualizarResumen() {
     }
 }
 
-/**
- * Muestra el modal de confirmación de cotización
- */
+
 function mostrarModalConfirmacion() {
     const validacion = cotizadorActual.validarConfiguracion();
 
@@ -214,13 +197,11 @@ function mostrarModalConfirmacion() {
     }
 }
 
-/**
- * Abre el formulario de contacto con la cotización
- */
+
 function abrirFormularioContacto() {
     const resumen = cotizadorActual.obtenerResumen();
 
-    // Generar HTML del resumen
+
     const resumenHTML = Object.values(resumen.configuracion).map(prod =>
         `<li class="list-group-item bg-dark text-white border-secondary d-flex justify-content-between">
             <span>${prod.nombre}</span>
@@ -265,7 +246,7 @@ function abrirFormularioContacto() {
         cancelButtonColor: '#6b7280',
         width: '600px',
         didOpen: () => {
-            // Precargar datos de ejemplo
+
             document.getElementById('nombre-modal').value = 'Juan Pérez';
             document.getElementById('email-modal').value = 'juan.perez@ejemplo.com';
             document.getElementById('telefono-modal').value = '1145678901';
@@ -289,9 +270,7 @@ function abrirFormularioContacto() {
     });
 }
 
-/**
- * Muestra las cotizaciones guardadas
- */
+
 function mostrarCotizacionesGuardadas() {
     const cotizaciones = cargarCotizaciones();
 
@@ -332,9 +311,7 @@ function mostrarCotizacionesGuardadas() {
     });
 }
 
-/**
- * Muestra la comparación de múltiples configuraciones
- */
+
 function mostrarComparacion() {
     const cotizaciones = cargarCotizaciones();
 
@@ -348,7 +325,7 @@ function mostrarComparacion() {
         return;
     }
 
-    // Tomar las últimas 3 cotizaciones
+
     const comparar = cotizaciones.slice(-3);
 
     const tablaHTML = `
