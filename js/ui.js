@@ -19,7 +19,9 @@ function renderizarCategorias() {
         col.className = 'col';
         col.innerHTML = `
             <div class="categoria-card h-100">
-                <span class="categoria-icono">${categoria.icono}</span>
+                <span class="categoria-icono">
+                    ${categoria.icono.startsWith('bi-') ? `<i class="bi ${categoria.icono}"></i>` : categoria.icono}
+                </span>
                 <h3 class="h5 text-white mb-2">${categoria.nombre}</h3>
                 <p class="text-secondary small mb-3">${categoria.descripcion}</p>
                 <button class="btn btn-primary btn-sm" onclick="mostrarProductosCategoria('${categoria.id}')">
@@ -90,8 +92,8 @@ function renderizarProductos(categoria, productos) {
                     <p class="text-secondary small mb-2">${producto.descripcion}</p>
                     <div class="d-flex flex-wrap gap-1 mb-3">
                         ${Object.entries(producto.specs).map(([key, value]) =>
-                            `<span class="spec-tag">${value}</span>`
-                        ).join('')}
+            `<span class="spec-tag">${value}</span>`
+        ).join('')}
                     </div>
                     <div class="mt-auto d-flex justify-content-between align-items-center">
                         <span class="h5 mb-0 text-info fw-bold">$${producto.precio.toLocaleString('es-AR')}</span>
@@ -192,8 +194,8 @@ function mostrarModalConfirmacion() {
                 <p>Te faltan algunos componentes esenciales:</p>
                 <ul class="list-unstyled text-start mx-auto" style="max-width: 300px;">
                     ${validacion.categoriasFaltantes.map(cat =>
-                        `<li><i class="bi bi-exclamation-circle text-warning me-2"></i>${obtenerCategoria(cat)?.nombre || cat}</li>`
-                    ).join('')}
+                `<li><i class="bi bi-exclamation-circle text-warning me-2"></i>${obtenerCategoria(cat)?.nombre || cat}</li>`
+            ).join('')}
                 </ul>
                 <p class="mt-3">¿Deseas continuar de todas formas?</p>
             `,
