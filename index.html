@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,39 +8,49 @@
     <meta name="keywords" content="cotizador, computadoras, PC, gaming, hardware">
     <meta name="author" content="Proyecto Final JavaScript">
     <title>Cotizador de PC - Arma tu Computadora Ideal</title>
-    
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <!-- Fuentes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Estilos -->
+
+    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="styles.css">
-    
+
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <!-- Loader -->
-    <div id="loader" class="loader">
-        <div class="loader-spinner"></div>
-        <p>Cargando componentes...</p>
+    <div id="loader"
+        class="loader position-fixed top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+        style="z-index: 9999;">
+        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="text-secondary">Cargando componentes...</p>
     </div>
 
     <!-- Header -->
-    <header class="header">
+    <header class="header sticky-top bg-dark bg-opacity-75 border-bottom border-secondary py-3"
+        style="backdrop-filter: blur(10px);">
         <div class="container">
-            <div class="header-content">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div class="logo">
-                    <h1>🖥️ PC Cotizador</h1>
-                    <span class="logo-subtitle">Tu computadora ideal</span>
+                    <h1 class="h3 mb-0 fw-bold text-gradient">🖥️ PC Cotizador</h1>
+                    <small class="text-secondary">Tu computadora ideal</small>
                 </div>
-                <nav class="nav">
-                    <button class="btn btn-outline" id="btn-ver-guardadas">
-                        📋 Mis Cotizaciones
+                <nav class="d-flex gap-2">
+                    <button class="btn btn-outline-light btn-sm" id="btn-ver-guardadas">
+                        <i class="bi bi-clipboard-check me-1"></i> Mis Cotizaciones
                     </button>
-                    <button class="btn btn-outline" id="btn-comparar">
-                        ⚖️ Comparar
+                    <button class="btn btn-outline-light btn-sm" id="btn-comparar">
+                        <i class="bi bi-arrow-left-right me-1"></i> Comparar
                     </button>
                 </nav>
             </div>
@@ -47,83 +58,95 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2 class="hero-title">Arma tu Computadora Ideal</h2>
-                <p class="hero-description">
-                    Selecciona los mejores componentes, obtén descuentos automáticos y recibe tu cotización al instante
-                </p>
-                <div class="hero-features">
-                    <div class="feature-tag">✨ Precios en tiempo real</div>
-                    <div class="feature-tag">💰 Descuentos automáticos</div>
-                    <div class="feature-tag">💾 Guarda tus configuraciones</div>
-                </div>
+    <section class="hero py-5 text-center position-relative overflow-hidden">
+        <div class="hero-glow"></div>
+        <div class="container position-relative">
+            <h2 class="display-5 fw-bold mb-3 text-white">Arma tu Computadora Ideal</h2>
+            <p class="lead text-secondary mb-4 mx-auto" style="max-width: 700px;">
+                Selecciona los mejores componentes, obtén descuentos automáticos y recibe tu cotización al instante
+            </p>
+            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                <span class="badge bg-dark bg-opacity-50 border border-secondary px-3 py-2 rounded-pill">
+                    <i class="bi bi-lightning-charge text-warning me-1"></i> Precios en tiempo real
+                </span>
+                <span class="badge bg-dark bg-opacity-50 border border-secondary px-3 py-2 rounded-pill">
+                    <i class="bi bi-percent text-success me-1"></i> Descuentos automáticos
+                </span>
+                <span class="badge bg-dark bg-opacity-50 border border-secondary px-3 py-2 rounded-pill">
+                    <i class="bi bi-save text-info me-1"></i> Guarda tus configuraciones
+                </span>
             </div>
         </div>
     </section>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content py-5">
         <div class="container">
-            <div class="content-grid">
+            <div class="row g-4">
                 <!-- Sección de categorías y productos -->
-                <div class="productos-column">
+                <div class="col-lg-8">
                     <!-- Categorías -->
-                    <section class="categorias-section">
-                        <h2 class="section-title">Selecciona los Componentes</h2>
-                        <div id="categorias-container" class="categorias-grid"></div>
+                    <section class="categorias-section mb-5">
+                        <h2 class="h4 fw-bold text-gradient mb-4">Selecciona los Componentes</h2>
+                        <div id="categorias-container" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"></div>
                     </section>
 
                     <!-- Productos -->
                     <section id="productos-section" class="productos-section" style="display: none;">
-                        <div class="productos-header">
-                            <h2 id="productos-titulo" class="section-title">Productos</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 id="productos-titulo" class="h4 fw-bold text-gradient mb-0">Productos</h2>
                         </div>
-                        <div id="productos-grid" class="productos-grid"></div>
+                        <div id="productos-grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3"></div>
                     </section>
                 </div>
 
                 <!-- Sidebar - Resumen de cotización -->
-                <aside class="resumen-sidebar">
-                    <div class="resumen-sticky">
-                        <div class="resumen-header">
-                            <h3>Tu Configuración</h3>
-                            <span class="resumen-badge" style="display: none;">0</span>
+                <aside class="col-lg-4">
+                    <div class="resumen-sticky card bg-dark bg-opacity-50 border-secondary"
+                        style="backdrop-filter: blur(10px);">
+                        <div
+                            class="card-header bg-transparent border-secondary d-flex justify-content-between align-items-center">
+                            <h3 class="h5 mb-0 fw-bold">Tu Configuración</h3>
+                            <span class="badge bg-primary rounded-pill resumen-badge" style="display: none;">0</span>
                         </div>
 
-                        <div id="resumen-items" class="resumen-items">
-                            <p class="resumen-vacio">No hay componentes seleccionados</p>
-                        </div>
-
-                        <div id="descuentos-aplicados" class="descuentos-aplicados" style="display: none;">
-                            <!-- Se genera dinámicamente -->
-                        </div>
-
-                        <div class="resumen-totales">
-                            <div class="total-row">
-                                <span>Subtotal:</span>
-                                <span id="total-base">$0</span>
+                        <div class="card-body">
+                            <div id="resumen-items" class="resumen-items mb-3"
+                                style="max-height: 300px; overflow-y: auto;">
+                                <p class="text-secondary text-center py-4 mb-0">No hay componentes seleccionados</p>
                             </div>
-                            <div class="total-row descuento-row">
-                                <span>Descuento:</span>
-                                <span id="total-descuento" class="descuento-valor">0%</span>
+
+                            <div id="descuentos-aplicados" class="descuentos-aplicados alert alert-success py-2 mb-3"
+                                style="display: none;">
+                                <!-- Se genera dinámicamente -->
                             </div>
-                            <div class="total-row total-final-row">
-                                <span>Total Final:</span>
-                                <span id="total-final" class="precio-final">$0</span>
+
+                            <div class="resumen-totales bg-dark bg-opacity-50 rounded p-3 mb-3">
+                                <div class="d-flex justify-content-between mb-2 text-secondary small">
+                                    <span>Subtotal:</span>
+                                    <span id="total-base">$0</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 text-success small">
+                                    <span>Descuento:</span>
+                                    <span id="total-descuento" class="fw-semibold">0%</span>
+                                </div>
+                                <hr class="border-secondary my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">Total Final:</span>
+                                    <span id="total-final" class="h4 mb-0 fw-bold text-gradient">$0</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="resumen-acciones">
-                            <button class="btn btn-primary btn-block" id="btn-enviar">
-                                📧 Enviar Cotización
+                        <div class="card-footer bg-transparent border-secondary d-grid gap-2">
+                            <button class="btn btn-primary" id="btn-enviar">
+                                <i class="bi bi-envelope me-1"></i> Enviar Cotización
                             </button>
-                            <button class="btn btn-secondary btn-block" id="btn-guardar">
-                                💾 Guardar
+                            <button class="btn btn-outline-info" id="btn-guardar">
+                                <i class="bi bi-save me-1"></i> Guardar
                             </button>
-                            <button class="btn btn-outline btn-block" id="btn-limpiar">
-                                🗑️ Limpiar Todo
+                            <button class="btn btn-outline-secondary" id="btn-limpiar">
+                                <i class="bi bi-trash me-1"></i> Limpiar Todo
                             </button>
                         </div>
                     </div>
@@ -133,16 +156,17 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 PC Cotizador - Proyecto Final JavaScript</p>
-                <p class="footer-info">
-                    Todos los precios son orientativos y están sujetos a cambios
-                </p>
-            </div>
+    <footer class="footer bg-dark border-top border-secondary py-4 mt-5">
+        <div class="container text-center">
+            <p class="text-secondary mb-1">&copy; 2026 PC Cotizador - Proyecto Final JavaScript</p>
+            <p class="text-muted small mb-0">
+                Todos los precios son orientativos y están sujetos a cambios
+            </p>
         </div>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts -->
     <script src="js/data.js"></script>
@@ -152,4 +176,5 @@
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>
